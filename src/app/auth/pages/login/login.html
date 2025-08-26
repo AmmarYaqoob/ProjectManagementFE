@@ -1,0 +1,48 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-900">Login</h2>
+    
+    <button type="button" class="w-full justify-center py-2 px-4 border border-gray-300 rounded-md shadow-sm bg-white text-sm font-medium text-gray-500 hover:bg-gray-50 flex items-center">
+      <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a8 8 0 100 16 8 8 0 000-16zM5.125 6.125a.875.875 0 111.25 0 .875.875 0 01-1.25 0zM8.75 6.125a.875.875 0 111.25 0 .875.875 0 01-1.25 0zM12.375 6.125a.875.875 0 111.25 0 .875.875 0 01-1.25 0zM15 10a5 5 0 01-5 5V9.375a3.75 3.75 0 115.303-3.078A4.98 4.98 0 0115 10z"></path></svg>
+      Login with Google
+    </button>
+    <div class="relative flex py-2 items-center">
+        <div class="flex-grow border-t border-gray-300"></div>
+        <span class="flex-shrink mx-4 text-gray-500">Or continue with</span>
+        <div class="flex-grow border-t border-gray-300"></div>
+    </div>
+
+    <form class="space-y-6" [formGroup]="loginForm" (ngSubmit)="login()">
+      <div>
+        <label for="email" class="text-sm font-medium text-gray-700">Email</label>
+        <input formControlName="email" type="email" name="email" id="email" class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="you@example.com">
+        <div *ngIf="loginForm.get('email')?.invalid && (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)" class="text-red-600 text-sm mt-1">
+          <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+          <div *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email.</div>
+        </div>
+      </div>
+      <div>
+        <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+        <input formControlName="password" type="password" name="password" id="password" class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="••••••••">
+         <div *ngIf="loginForm.get('password')?.invalid && (loginForm.get('password')?.dirty || loginForm.get('password')?.touched)" class="text-red-600 text-sm mt-1">
+          <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+        </div>
+      </div>
+      <div class="flex items-center justify-between">
+        <div class="text-sm">
+          <a routerLink="/auth/forgot-password" class="font-medium text-indigo-600 hover:text-indigo-500">Forgot your password?</a>
+        </div>
+      </div>
+      <div>
+        <button type="submit" [disabled]="loginForm.invalid || isSubmitting" class="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400">
+          <span *ngIf="!isSubmitting">Login</span>
+          <span *ngIf="isSubmitting">Logging in...</span>
+        </button>
+      </div>
+    </form>
+    <p class="text-sm text-center text-gray-600">
+      Don't have an account?
+      <a routerLink="/auth/register" class="font-medium text-indigo-600 hover:text-indigo-500">Sign up</a>
+    </p>
+  </div>
+</div>

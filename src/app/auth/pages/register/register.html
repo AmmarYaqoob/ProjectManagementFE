@@ -1,0 +1,40 @@
+<div class="flex items-center justify-center min-h-screen bg-gray-100">
+  <div class="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold text-center text-gray-900">Create an account</h2>
+    <form class="space-y-6" [formGroup]="registerForm" (ngSubmit)="register()">
+      <div>
+        <label for="name" class="text-sm font-medium text-gray-700">Full Name</label>
+        <input formControlName="name" type="text" name="name" id="name" class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="John Doe">
+        <div *ngIf="registerForm.get('name')?.invalid && (registerForm.get('name')?.dirty || registerForm.get('name')?.touched)" class="text-red-600 text-sm mt-1">
+          <div *ngIf="registerForm.get('name')?.errors?.['required']">Name is required.</div>
+        </div>
+      </div>
+      <div>
+        <label for="email" class="text-sm font-medium text-gray-700">Email</label>
+        <input formControlName="email" type="email" name="email" id="email" class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="you@example.com">
+        <div *ngIf="registerForm.get('email')?.invalid && (registerForm.get('email')?.dirty || registerForm.get('email')?.touched)" class="text-red-600 text-sm mt-1">
+          <div *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</div>
+          <div *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email.</div>
+        </div>
+      </div>
+      <div>
+        <label for="password" class="text-sm font-medium text-gray-700">Password</label>
+        <input formControlName="password" type="password" name="password" id="password" class="w-full px-3 py-2 mt-1 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500" placeholder="••••••••">
+        <div *ngIf="registerForm.get('password')?.invalid && (registerForm.get('password')?.dirty || registerForm.get('password')?.touched)" class="text-red-600 text-sm mt-1">
+          <div *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</div>
+          <div *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 8 characters long.</div>
+        </div>
+      </div>
+      <div>
+        <button type="submit" [disabled]="registerForm.invalid || isSubmitting" class="w-full px-4 py-2 font-medium text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-400">
+          <span *ngIf="!isSubmitting">Create Account</span>
+          <span *ngIf="isSubmitting">Creating Account...</span>
+        </button>
+      </div>
+    </form>
+    <p class="text-sm text-center text-gray-600">
+      Already have an account?
+      <a routerLink="/auth/login" class="font-medium text-indigo-600 hover:text-indigo-500">Log in</a>
+    </p>
+  </div>
+</div>

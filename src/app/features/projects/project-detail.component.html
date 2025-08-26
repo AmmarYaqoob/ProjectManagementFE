@@ -1,0 +1,361 @@
+<div class="min-h-screen bg-gray-50">
+  <!-- Project Header -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-4">
+          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">{{ project.key }}</span>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">{{ project.name }}</h1>
+            <p class="text-sm text-gray-600">{{ project.description }}</p>
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="text-right">
+            <p class="text-sm text-gray-600">Project Owner</p>
+            <p class="font-medium text-gray-900">{{ project.owner }}</p>
+          </div>
+          <div class="text-right">
+            <p class="text-sm text-gray-600">Status</p>
+            <span
+              class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              {{ project.status }}
+            </span>
+          </div>
+          <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+            Create Issue
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project Tabs -->
+  <div class="bg-white border-b border-gray-200">
+    <div class="px-6">
+      <nav class="flex space-x-8">
+        <button *ngFor="let tab of tabs" (click)="setActiveTab(tab.id)" [ngClass]="{
+            'border-blue-500 text-blue-600': activeTab === tab.id,
+            'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== tab.id
+          }" class="py-4 px-1 border-b-2 font-medium text-sm transition-colors duration-200">
+          <fa-icon [icon]="tab.icon" class="mr-2"></fa-icon>
+          {{ tab.label }}
+        </button>
+      </nav>
+    </div>
+  </div>
+
+  <!-- Tab Content -->
+  <div class="px-6 py-6">
+    <!-- Board Tab -->
+    <div *ngIf="activeTab === 'board'" class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">Kanban Board</h2>
+        <div class="flex items-center space-x-4">
+          <button class="text-sm text-blue-600 hover:text-blue-800">Filter</button>
+          <button class="text-sm text-blue-600 hover:text-blue-800">View Options</button>
+        </div>
+      </div>
+
+      <!-- Kanban Board -->
+      <div class="grid grid-cols-4 gap-6">
+        <div *ngFor="let column of columns" class="space-y-4">
+          <!-- Column Header -->
+          <div class="flex items-center justify-between">
+            <h3 class="font-medium text-gray-900">{{ column.title }}</h3>
+            <span class="bg-gray-100 text-gray-600 text-xs px-2 py-1 rounded-full">
+              {{ column.tasks.length }}
+            </span>
+          </div>
+
+          <!-- Column Content -->
+          <div class="min-h-[600px] bg-gray-50 rounded-lg p-4 border-2 border-dashed border-gray-300"
+            [attr.data-status]="column.id" (dragover)="onDragOver($event, column.id)" (dragleave)="onDragLeave($event)"
+            (drop)="onDrop($event, column.id)">
+            <!-- Tasks in this column -->
+            <div *ngFor="let task of column.tasks; let taskIndex = index"
+              class="bg-white rounded-lg p-4 mb-3 shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+              draggable="true" [attr.data-task-id]="task.id" (dragstart)="onTaskDragStart($event, task, column.id)"
+              (dragend)="onTaskDragEnd($event)" (dragover)="onTaskDragOver($event, task, column.id)"
+              (dragleave)="onTaskDragLeave($event)" (drop)="onTaskDrop($event, task, column.id)" (click)="openTaskModal(task)"
+              title="Drag to move or reorder task">
+              <!-- Task Header -->
+              <div class="flex items-start justify-between mb-2">
+                <h4 class="font-medium text-gray-900 text-sm">{{ task.title }}</h4>
+                <span [class]="getPriorityColor(task.priority)"
+                  class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                  {{ getPriorityLabel(task.priority) }}
+                </span>
+              </div>
+
+              <!-- Task Type Label -->
+              <div class="mb-2">
+                <span [class]="getTaskTypeColor(task.type)"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                  {{ task.type | titlecase }}
+                </span>
+              </div>
+
+              <!-- Task Description -->
+              <p class="text-gray-600 text-xs mb-3 line-clamp-2">{{ task.description }}</p>
+
+              <!-- Task Meta -->
+              <div class="space-y-2">
+                <!-- Assignee -->
+                <div class="flex items-center space-x-2">
+                  <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span class="text-xs text-gray-600">{{ getInitials(task.assignee) }}</span>
+                  </div>
+                  <span class="text-xs text-gray-600">{{ task.assignee }}</span>
+                </div>
+
+                <!-- Story Points -->
+                <div *ngIf="task.storyPoints" class="flex items-center space-x-1">
+                  <fa-icon [icon]="faChartLine" class="text-xs text-gray-400"></fa-icon>
+                  <span class="text-xs text-gray-600">{{ task.storyPoints }} SP</span>
+                </div>
+
+                <!-- Labels -->
+                <div class="flex flex-wrap gap-1">
+                  <span *ngFor="let label of task.labels"
+                    class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                    {{ label }}
+                  </span>
+                </div>
+
+                <!-- Due Date -->
+                <div *ngIf="task.dueDate" class="flex items-center space-x-1">
+                  <fa-icon [icon]="faCalendar" class="text-xs text-gray-400"></fa-icon>
+                  <span class="text-xs text-gray-600">{{ task.dueDate | date:'MMM dd' }}</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Add Task Button -->
+            <button
+              class="w-full text-center py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
+              (click)="startCreatingTask()">
+              <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
+              Add Task
+            </button>
+
+            <!-- Task Creation Form -->
+            <div *ngIf="isCreatingTask" class="bg-white border rounded-lg p-4 mb-3 shadow-sm">
+              <div class="space-y-3">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Task Title</label>
+                  <input [(ngModel)]="newTaskTitle" type="text" placeholder="Enter task title..." 
+                         class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Task Type</label>
+                  <select [(ngModel)]="newTaskType" 
+                          class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="task">Task</option>
+                    <option value="issue">Issue</option>
+                    <option value="bug">Bug</option>
+                    <option value="story">Story</option>
+                    <option value="epic">Epic</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Description (Optional)</label>
+                  <textarea [(ngModel)]="newTaskDescription" rows="3" placeholder="Enter task description..." 
+                            class="w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                </div>
+                <div class="flex items-center gap-2">
+                  <button class="px-3 py-1.5 bg-blue-600 text-white rounded-md hover:bg-blue-700" 
+                          (click)="createTask()">Create Task</button>
+                  <button class="px-3 py-1.5 text-gray-700 hover:text-gray-900" 
+                          (click)="cancelCreatingTask()">Cancel</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Tab -->
+    <div *ngIf="activeTab === 'overview'" class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-900">Project Overview</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Project Details</h3>
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm text-gray-600">Start Date</p>
+              <p class="font-medium">{{ project.startDate | date:'MMM dd, yyyy' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">End Date</p>
+              <p class="font-medium">{{ project.endDate | date:'MMM dd, yyyy' }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Team Members</p>
+              <p class="font-medium">{{ project.team.length }} members</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Progress</h3>
+          <div class="space-y-3">
+            <div>
+              <p class="text-sm text-gray-600">Completed Tasks</p>
+              <p class="text-2xl font-bold text-green-600">{{ completedTasksCount }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-gray-600">Total Tasks</p>
+              <p class="text-2xl font-bold text-gray-900">{{ totalTasksCount }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-lg shadow-sm">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Team</h3>
+          <div class="space-y-2">
+            <div *ngFor="let member of project.team" class="flex items-center space-x-2">
+              <div class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
+                <span class="text-sm text-gray-600">{{ getInitials(member) }}</span>
+              </div>
+              <span class="text-sm font-medium">{{ member }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Backlog Tab -->
+    <div *ngIf="activeTab === 'backlog'" class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-semibold text-gray-900">Backlog ({{ totalBacklogCount }} issues)</h2>
+        <div class="flex items-center space-x-4">
+          <button class="text-sm text-blue-600 hover:text-blue-800">Filter</button>
+          <button class="text-sm text-blue-600 hover:text-blue-800">Sort</button>
+        </div>
+      </div>
+
+      <!-- Select All -->
+      <div class="flex items-center space-x-3">
+        <input type="checkbox" [checked]="selectAllBacklog" (change)="toggleSelectAllBacklog()" 
+               class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+        <label class="text-sm font-medium text-gray-700">Select All</label>
+        <span class="text-sm text-gray-500">({{ selectedBacklogTasks.size }} selected)</span>
+      </div>
+
+      <!-- Backlog List -->
+      <div class="bg-white rounded-lg shadow-sm border">
+        <div class="px-6 py-4 border-b bg-gray-50">
+          <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-700">
+            <div class="col-span-1">Task ID</div>
+            <div class="col-span-4">Name</div>
+            <div class="col-span-2">Type</div>
+            <div class="col-span-2">Status</div>
+            <div class="col-span-2">Assignee</div>
+            <div class="col-span-1">Actions</div>
+          </div>
+        </div>
+        
+        <div class="divide-y divide-gray-200" 
+             (dragover)="$event.preventDefault()" 
+             (drop)="onBacklogDrop($event)">
+          <div *ngFor="let task of backlogTasks; let i = index" 
+               class="px-6 py-4 hover:bg-gray-50 transition-colors"
+               draggable="true"
+               (dragstart)="onBacklogDragStart($event, task)">
+            <div class="grid grid-cols-12 gap-4 items-center">
+              <!-- Task ID -->
+              <div class="col-span-1">
+                <div class="flex items-center space-x-3">
+                  <input type="checkbox" [checked]="selectedBacklogTasks.has(task.id)" 
+                         (change)="toggleBacklogTaskSelection(task.id)"
+                         class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500">
+                  <span class="text-sm font-mono text-gray-600">{{ task.id }}</span>
+                </div>
+              </div>
+              
+              <!-- Name -->
+              <div class="col-span-4">
+                <button class="text-left text-sm font-medium text-gray-900 hover:text-blue-600" 
+                        (click)="openTaskModal(task)">
+                  {{ task.title }}
+                </button>
+              </div>
+              
+              <!-- Type -->
+              <div class="col-span-2">
+                <span [class]="getTaskTypeColor(task.type)"
+                      class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium">
+                  {{ task.type | titlecase }}
+                </span>
+              </div>
+              
+              <!-- Status -->
+              <div class="col-span-2">
+                <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                  {{ task.status | titlecase }}
+                </span>
+              </div>
+              
+              <!-- Assignee -->
+              <div class="col-span-2">
+                <div class="flex items-center space-x-2">
+                  <div class="w-6 h-6 bg-gray-300 rounded-full flex items-center justify-center">
+                    <span class="text-xs text-gray-600">{{ getInitials(task.assignee) }}</span>
+                  </div>
+                  <span class="text-sm text-gray-700">{{ task.assignee }}</span>
+                </div>
+              </div>
+              
+              <!-- Actions -->
+              <div class="col-span-1">
+                <button class="text-gray-400 hover:text-gray-600" (click)="openTaskModal(task)">
+                  <fa-icon [icon]="faCog" class="text-sm"></fa-icon>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- List Tab -->
+    <div *ngIf="activeTab === 'list'" class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-900">List View</h2>
+      <p class="text-gray-600">List view of all tasks will be displayed here.</p>
+    </div>
+
+    <!-- Timeline Tab -->
+    <div *ngIf="activeTab === 'timeline'" class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-900">Timeline</h2>
+      <p class="text-gray-600">Project timeline and milestones will be displayed here.</p>
+    </div>
+
+    <!-- Reports Tab -->
+    <div *ngIf="activeTab === 'reports'" class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-900">Reports</h2>
+      <p class="text-gray-600">Project reports and analytics will be displayed here.</p>
+    </div>
+
+    <!-- Settings Tab -->
+    <div *ngIf="activeTab === 'settings'" class="space-y-6">
+      <h2 class="text-xl font-semibold text-gray-900">Project Settings</h2>
+      <p class="text-gray-600">Project configuration and settings will be displayed here.</p>
+    </div>
+  </div>
+</div>
+
+<!-- Task Detail Modal -->
+<app-task-detail-modal
+  [open]="isTaskModalOpen"
+  [task]="selectedTask"
+  (close)="closeTaskModal()"
+  (saveDescription)="saveTaskDescription($event)"
+  (addComment)="addTaskComment($event)"
+  (quickReply)="sendQuickReply($event)"
+  (changeStatus)="updateTaskStatus($event)"
+  (changePriority)="updateTaskPriority($event)">
+</app-task-detail-modal>

@@ -1,0 +1,55 @@
+<div>
+  <h1 class="text-3xl font-bold text-gray-800">For you</h1>
+
+  <!-- Recent Projects Section -->
+  <div class="mt-8">
+    <div class="flex justify-between items-center">
+      <h2 class="text-xl font-semibold text-gray-700">Recent projects</h2>
+      <a routerLink="/projects" class="text-blue-600 hover:text-blue-800 font-semibold">View all projects</a>
+    </div>
+    <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <!-- Project Card -->
+      <a *ngFor="let project of recentProjects" [routerLink]="['/projects', project.id]" class="block bg-white rounded-lg shadow-md overflow-hidden transform hover:-translate-y-1 transition-transform duration-300">
+        <div class="p-4">
+          <div class="h-2 w-full {{ project.color }} mb-4 rounded-full"></div>
+          <h3 class="text-lg font-bold text-gray-900 truncate">{{ project.name }}</h3>
+          <p class="text-sm text-gray-600 mt-1">Owned by {{ project.owner }}</p>
+          <p class="text-xs text-gray-500 mt-4">Last updated {{ project.updated }}</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabs Section -->
+  <div class="mt-12">
+    <div class="border-b border-gray-200">
+      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+        <a *ngFor="let tab of tabs" href="#" (click)="setActiveTab(tab); $event.preventDefault()" 
+           [ngClass]="{
+             'border-blue-500 text-blue-600': activeTab === tab,
+             'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300': activeTab !== tab
+           }" 
+           class="whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">
+          {{ tab }}
+        </a>
+      </nav>
+    </div>
+    <div class="py-6">
+      <!-- Tab content will go here -->
+      <div [ngSwitch]="activeTab">
+        <div *ngSwitchCase="'Your projects'">
+          <p class="text-gray-600">Content for Your projects tab.</p>
+        </div>
+        <div *ngSwitchCase="'Recently viewed'">
+          <p class="text-gray-600">Content for Recently viewed tab.</p>
+        </div>
+        <div *ngSwitchCase="'Urgents'">
+          <p class="text-gray-600">Content for Urgents tab.</p>
+        </div>
+        <div *ngSwitchCase="'Starred'">
+          <p class="text-gray-600">Content for Starred tab.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

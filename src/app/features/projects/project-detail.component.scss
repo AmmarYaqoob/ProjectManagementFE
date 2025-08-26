@@ -1,0 +1,331 @@
+// Custom styles for the project detail component
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+// Kanban board column styles
+.kanban-column {
+  min-height: 600px;
+  background-color: #f9fafb;
+  border: 2px dashed #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    border-color: #9ca3af;
+    background-color: #f3f4f6;
+  }
+}
+
+// Task card styles
+.task-card {
+  background: white;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+
+  &:hover {
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    transform: translateY(-1px);
+  }
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Priority badge styles
+.priority-badge {
+  &.low {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  &.medium {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+
+  &.high {
+    background-color: #fed7aa;
+    color: #c2410c;
+  }
+
+  &.critical {
+    background-color: #fecaca;
+    color: #dc2626;
+  }
+}
+
+// Tab styles
+.project-tab {
+  position: relative;
+  transition: all 0.2s ease-in-out;
+
+  &.active {
+    color: #2563eb;
+    border-bottom-color: #2563eb;
+  }
+
+  &:hover:not(.active) {
+    color: #374151;
+    border-bottom-color: #d1d5db;
+  }
+}
+
+// Project header styles
+.project-header {
+  background: white;
+  border-bottom: 1px solid #e5e7eb;
+  padding: 1rem 1.5rem;
+
+  .project-logo {
+    width: 3rem;
+    height: 3rem;
+    background: #2563eb;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.125rem;
+  }
+
+  .project-info {
+    h1 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: #111827;
+      margin: 0;
+    }
+
+    p {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+
+  .project-meta {
+    text-align: right;
+
+    .meta-label {
+      font-size: 0.875rem;
+      color: #6b7280;
+      margin: 0;
+    }
+
+    .meta-value {
+      font-weight: 500;
+      color: #111827;
+      margin: 0;
+    }
+  }
+
+  .create-issue-btn {
+    background: #2563eb;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    border: none;
+    font-weight: 500;
+    transition: background-color 0.2s ease-in-out;
+
+    &:hover {
+      background: #1d4ed8;
+    }
+  }
+}
+
+// Status badge styles
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+
+  &.active {
+    background-color: #dcfce7;
+    color: #166534;
+  }
+
+  &.archived {
+    background-color: #f3f4f6;
+    color: #374151;
+  }
+
+  &.completed {
+    background-color: #dbeafe;
+    color: #1e40af;
+  }
+}
+
+// Responsive design
+@media (max-width: 1024px) {
+  .kanban-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .kanban-board {
+    grid-template-columns: 1fr;
+  }
+
+  .project-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+
+    .project-meta {
+      text-align: left;
+    }
+  }
+
+  .project-tabs {
+    overflow-x: auto;
+    white-space: nowrap;
+    
+    nav {
+      display: flex;
+      gap: 1rem;
+      padding-bottom: 0.5rem;
+    }
+  }
+}
+
+// Drag and drop styles
+.drag-over {
+  background-color: #eff6ff !important;
+  border-color: #3b82f6 !important;
+  border-style: solid !important;
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+}
+
+.task-dragging {
+  opacity: 0.5;
+  transform: rotate(2deg);
+  transition: all 0.2s ease-in-out;
+}
+
+// Column drop zone styles
+.kanban-column {
+  &.drag-over {
+    background-color: #eff6ff;
+    border-color: #3b82f6;
+    border-style: solid;
+  }
+}
+
+// Task card drag styles
+.task-card {
+  &.dragging {
+    cursor: grabbing;
+    user-select: none;
+  }
+}
+
+// Enhanced drag and drop styles
+.dragging {
+  cursor: grabbing !important;
+  user-select: none;
+  z-index: 1000;
+  position: relative;
+}
+
+.drop-target {
+  border: 2px dashed #3b82f6 !important;
+  background-color: #eff6ff !important;
+  transform: scale(1.02);
+  transition: all 0.2s ease-in-out;
+  position: relative;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background-color: #3b82f6;
+    border-radius: 2px;
+  }
+  
+  &::after {
+    content: 'Drop here';
+    position: absolute;
+    top: -25px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #3b82f6;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    white-space: nowrap;
+    z-index: 10;
+  }
+}
+
+// Task reordering visual feedback
+.task-reorder-zone {
+  min-height: 4px;
+  background-color: transparent;
+  transition: all 0.2s ease-in-out;
+  
+  &.drag-over {
+    background-color: #3b82f6;
+    height: 8px;
+    border-radius: 4px;
+  }
+}
+
+// Animation classes
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Custom scrollbar for tabs
+.project-tabs {
+  &::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 2px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+  }
+}

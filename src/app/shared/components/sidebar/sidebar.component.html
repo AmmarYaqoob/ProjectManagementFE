@@ -1,0 +1,29 @@
+<div class="flex flex-col h-screen bg-gray-800 text-white">
+  <!-- Logo -->
+  <div class="flex items-center justify-center h-16 flex-shrink-0">
+    <div class="w-10 h-10 bg-white rounded-full"></div>
+    <span [class.hidden]="!(isSidebarOpen$ | async)" class="ml-2 font-bold text-xl transition-opacity duration-300">Brand</span>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="flex-1 mt-5">
+    <a *ngFor="let item of menuItems" [routerLink]="item.link" routerLinkActive="bg-gray-700"
+       [routerLinkActiveOptions]="{ exact: true }"
+       class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white transition-colors duration-200">
+      <fa-icon [icon]="item.icon" class="h-6 w-6"></fa-icon>
+      <span [class.hidden]="!(isSidebarOpen$ | async)" class="mx-4 font-medium transition-opacity duration-300">{{ item.name }}</span>
+    </a>
+  </nav>
+
+  <!-- Footer -->
+  <div class="flex-shrink-0">
+    <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">
+      <fa-icon [icon]="faCog" class="h-6 w-6"></fa-icon>
+      <span [class.hidden]="!(isSidebarOpen$ | async)" class="mx-4 font-medium">Settings</span>
+    </a>
+    <a href="#" class="flex items-center px-6 py-3 text-gray-300 hover:bg-gray-700 hover:text-white">
+      <fa-icon [icon]="faSignOutAlt" class="h-6 w-6"></fa-icon>
+      <span [class.hidden]="!(isSidebarOpen$ | async)" class="mx-4 font-medium">Logout</span>
+    </a>
+  </div>
+</div> 

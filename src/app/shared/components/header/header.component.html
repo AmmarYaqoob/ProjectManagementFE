@@ -1,0 +1,65 @@
+<header class="bg-white shadow-md z-10">
+  <div class="container mx-auto px-6 py-2 flex justify-between items-center">
+    <div class="flex items-center">
+      <!-- Hamburger Menu for mobile -->
+      <button (click)="toggleSidebar()" class="text-gray-500 hover:text-gray-600 focus:outline-none focus:text-gray-600 lg:hidden">
+        <fa-icon [icon]="faBars" class="h-6 w-6"></fa-icon>
+      </button>
+      <div class="text-2xl font-bold text-gray-800">PM</div>
+    </div>
+
+    <!-- Middle -->
+    <div class="flex-1 flex justify-center items-center px-8">
+      <div class="w-full max-w-lg">
+        <input type="search" placeholder="Search..." class="w-full p-2 border border-gray-300 rounded-lg" />
+      </div>
+    </div>
+
+    <!-- Left Side -->
+    <div class="flex items-center space-x-6">
+      <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">Create Project</button>
+      
+      <!-- Notification Icon and Menu -->
+      <div class="relative">
+        <button (click)="showNotificationMenu = !showNotificationMenu" class="p-2 relative">
+          <fa-icon [icon]="faBell"></fa-icon>
+          <span *ngIf="notificationCount > 0" class="absolute top-0 right-0 h-4 w-4 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">{{ notificationCount }}</span>
+        </button>
+        <div *ngIf="showNotificationMenu" class="absolute right-0 mt-2 w-80 bg-white rounded-lg shadow-xl overflow-hidden z-10">
+          <div class="p-4">
+              <h4 class="text-lg font-semibold">Notifications</h4>
+              <!-- Notification Item -->
+              <div class="mt-4 border-b pb-2">
+                  <p class="font-bold">Project Alpha</p>
+                  <p class="text-sm text-gray-600">You were assigned a new task: "Design homepage".</p>
+                  <p class="text-xs text-gray-400 mt-1">2 hours ago</p>
+                  <button class="text-xs text-blue-500 mt-1">Mark as read</button>
+              </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Settings Icon and Menu -->
+      <div class="relative">
+        <button (click)="showSettingsMenu = !showSettingsMenu" class="p-2">
+          <fa-icon [icon]="faCog"></fa-icon>
+        </button>
+        <div *ngIf="showSettingsMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-10">
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">General Settings</a>
+          <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Notification Settings</a>
+        </div>
+      </div>
+      
+      <!-- User Icon and Menu -->
+      <div class="relative">
+        <button (click)="showUserMenu = !showUserMenu" class="p-2">
+          <fa-icon [icon]="faUserCircle" class="text-2xl"></fa-icon>
+        </button>
+        <div *ngIf="showUserMenu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-xl z-10">
+          <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Profile Settings</button>
+          <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" (click)="logout()">Logout</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</header> 

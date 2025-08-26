@@ -1,0 +1,134 @@
+<div class="space-y-6">
+  <!-- Header -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">All Projects</h1>
+      <p class="mt-2 text-gray-600">Manage and track all your projects in one place</p>
+    </div>
+         <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+       <fa-icon [icon]="faPlus" class="mr-2"></fa-icon>
+       New Project
+     </button>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="flex flex-col sm:flex-row gap-4">
+    <div class="flex-1">
+      <div class="relative">
+                 <input 
+           type="text" 
+           placeholder="Search projects..." 
+           class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+         >
+         <fa-icon [icon]="faSearch" class="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></fa-icon>
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">All Status</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+        <option value="archived">Archived</option>
+      </select>
+      <select class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+        <option value="">All Owners</option>
+        <option value="john">John Doe</option>
+        <option value="jane">Jane Smith</option>
+        <option value="mike">Mike Johnson</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Projects Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div 
+      *ngFor="let project of projects" 
+      class="bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow cursor-pointer"
+      [routerLink]="['/projects', project.id]"
+    >
+      <!-- Project Header -->
+      <div class="p-6 border-b border-gray-200">
+        <div class="flex items-start justify-between mb-3">
+          <div class="w-12 h-12 bg-blue-600 rounded-lg flex items-center justify-center">
+            <span class="text-white font-bold text-lg">{{ project.key }}</span>
+          </div>
+          <span 
+            [class]="getStatusColor(project.status)"
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium"
+          >
+            {{ project.status }}
+          </span>
+        </div>
+        
+        <h3 class="text-lg font-semibold text-gray-900 mb-2">{{ project.name }}</h3>
+        <p class="text-gray-600 text-sm line-clamp-2">{{ project.description }}</p>
+      </div>
+
+      <!-- Project Meta -->
+      <div class="p-6 space-y-4">
+        <!-- Progress Bar -->
+        <div>
+          <div class="flex items-center justify-between text-sm mb-2">
+            <span class="text-gray-600">Progress</span>
+            <span class="font-medium text-gray-900">{{ project.progress }}%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div 
+              [class]="getProgressColor(project.progress)"
+              class="h-2 rounded-full transition-all duration-300"
+              [style.width.%]="project.progress"
+            ></div>
+          </div>
+        </div>
+
+        <!-- Project Info -->
+        <div class="grid grid-cols-2 gap-4 text-sm">
+          <div>
+            <p class="text-gray-600">Owner</p>
+            <p class="font-medium text-gray-900">{{ project.owner }}</p>
+          </div>
+          <div>
+            <p class="text-gray-600">Team Size</p>
+            <p class="font-medium text-gray-900">{{ project.team.length }} members</p>
+          </div>
+        </div>
+
+        <!-- Team Members -->
+        <div>
+          <p class="text-gray-600 text-sm mb-2">Team</p>
+          <div class="flex -space-x-2">
+                         <div 
+               *ngFor="let member of project.team.slice(0, 4)" 
+               class="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center border-2 border-white"
+             >
+               <span class="text-xs text-gray-600">{{ getInitials(member) }}</span>
+             </div>
+            <div 
+              *ngIf="project.team.length > 4" 
+              class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center border-2 border-white"
+            >
+              <span class="text-xs text-gray-600">+{{ project.team.length - 4 }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Last Updated -->
+        <div class="text-xs text-gray-500">
+          Last updated {{ project.lastUpdated }}
+        </div>
+      </div>
+    </div>
+  </div>
+
+     <!-- Empty State -->
+   <div *ngIf="projects.length === 0" class="text-center py-12">
+     <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+       <fa-icon [icon]="faFolderOpen" class="text-2xl text-gray-400"></fa-icon>
+     </div>
+     <h3 class="text-lg font-medium text-gray-900 mb-2">No projects found</h3>
+     <p class="text-gray-600 mb-4">Get started by creating your first project</p>
+     <button class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+       Create Project
+     </button>
+   </div>
+</div>
